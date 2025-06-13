@@ -1,5 +1,7 @@
 import "./ConnectWalletButton.css";
 import { useState, useEffect } from "react";
+import { setUserData } from "../../../features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const SEPOLIA_TESTNET_CHAIN_ID = "0xaa36a7";
 
@@ -13,6 +15,7 @@ const ConnectWalletButton = ({
 }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [warning, setWarning] = useState(null);
+ const dispatch = useDispatch()
 
   const checkNetwork = async () => {
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
@@ -38,6 +41,8 @@ const ConnectWalletButton = ({
 
       setWalletAddress(accounts[0]);
       onConnect(accounts[0]);
+      dispatch(setUserData({ walletAddress: accounts[0] }));
+
       // validate network after connecting
       await checkNetwork();
     } catch (error) {
@@ -73,7 +78,7 @@ const ConnectWalletButton = ({
           className={`connect-wallet-btn connect-wallet-btn--connected ${
             warning ? "connect-wallet-btn--warning" : ""
           }`}
-          onClick={disconnectWallet} 
+          onClick={disconnectWallet}
         >
           {warning
             ? warning

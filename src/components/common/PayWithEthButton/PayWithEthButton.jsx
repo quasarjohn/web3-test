@@ -1,15 +1,32 @@
 import "./PayWithEthButton.css";
 import React, { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-const PayWithEthButton = ({
-  amount,
-  walletAddress,
-  onPaymentSuccessful = () => {},
-}) => {
+const PayWithEthButton = ({ amount, onPaymentSuccessful = () => {} }) => {
   const [status, setStatus] = useState("");
   const [txHash, setTxHash] = useState("");
 
-  const handleSuccessfulPayment = () => {};
+  const { email, walletAddress } = useSelector((state) => state.user);
+
+  const handleSuccessfulPayment = async () => {
+    const result = await new Promise((resolve, reject) => {
+      axios
+        .post("http://localhost:3000/order", {
+          email: email,
+          walletAddress: walletAddress,
+          amountETH: amount,
+        })
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+
+    console.log(result);
+  };
 
   const handlePayClick = () => {
     setStatus("pending");
