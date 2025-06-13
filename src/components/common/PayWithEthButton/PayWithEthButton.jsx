@@ -12,7 +12,7 @@ const PayWithEthButton = ({ amount, onPaymentSuccessful = () => {} }) => {
   const handleSuccessfulPayment = async () => {
     const result = await new Promise((resolve, reject) => {
       axios
-        .post("http://localhost:3000/order", {
+        .post("http://localhost:3000/api/order", {
           email: email,
           walletAddress: walletAddress,
           amountETH: amount,
