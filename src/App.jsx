@@ -5,10 +5,11 @@ import PayWithEthButton from "./components/common/PayWithEthButton/PayWithEthBut
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
+  const [amount, setAmount] = useState("");
 
-  useEffect(() => {
-    console.log(isConnected);
-  }, [isConnected]);
+  const handleSuccessfulPayment = () => {
+    setAmount("");
+  };
 
   return (
     <>
@@ -19,8 +20,26 @@ function App() {
         onWalletDisconnected={() => {
           setIsConnected(false);
         }}
-      ></Header>
-      {isConnected && <PayWithEthButton />}
+      />
+      {isConnected && (
+        <div style={{ padding: "20px" }}>
+          <label>
+            Enter amount (ETH):{" "}
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              style={{ marginRight: "10px" }}
+            />
+          </label>
+          <PayWithEthButton
+            amount={amount}
+            onPaymentSuccessful={handleSuccessfulPayment}
+          />
+        </div>
+      )}
     </>
   );
 }

@@ -1,8 +1,15 @@
+import "./PayWithEthButton.css";
 import React, { useState } from "react";
 
-const PayWithEthButton = () => {
+const PayWithEthButton = ({
+  amount,
+  walletAddress,
+  onPaymentSuccessful = () => {},
+}) => {
   const [status, setStatus] = useState("");
   const [txHash, setTxHash] = useState("");
+
+  const handleSuccessfulPayment = () => {};
 
   const handlePayClick = () => {
     setStatus("pending");
@@ -13,6 +20,12 @@ const PayWithEthButton = () => {
     setTimeout(() => {
       // 50% chance to fail or succeed
       const isSuccessful = Math.random() > 0.5;
+
+      if (isSuccessful) {
+        handleSuccessfulPayment();
+        onPaymentSuccessful();
+      }
+
       setStatus(isSuccessful ? "success" : "failed");
     }, 2000);
   };
@@ -31,8 +44,10 @@ const PayWithEthButton = () => {
   };
 
   return (
-    <div>
-      <button onClick={handlePayClick}>Pay with ETH</button>
+    <div className="pay-with-eth-btn">
+      <button disabled={amount <= 0} onClick={handlePayClick}>
+        Pay with ETH
+      </button>
       {status && (
         <div style={{ marginTop: "10px", color: getStatusColor() }}>
           {status === "pending" && "Pending..."}
