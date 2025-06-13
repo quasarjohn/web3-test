@@ -2,7 +2,10 @@ import React from "react";
 import "./Header.css"; // Optional: for styling
 import ConnectWalletButton from "../common/ConnectWalletButton/ConnectWalletButton";
 
-export const Header = () => {
+const Header = ({
+  onWalletConnected = () => {},
+  onWalletDisconnected = () => {},
+}) => {
   return (
     <header className="header">
       <nav>
@@ -18,7 +21,14 @@ export const Header = () => {
           </li>
         </ul>
       </nav>
-      <ConnectWalletButton className="connect-wallet-btn"></ConnectWalletButton>
+      <ConnectWalletButton
+        onConnect={onWalletConnected}
+        onError={onWalletDisconnected}
+        onDisconnect={onWalletDisconnected}
+        className="connect-wallet-btn"
+      ></ConnectWalletButton>
     </header>
   );
 };
+
+export default Header;

@@ -6,8 +6,10 @@ const SEPOLIA_TESTNET_CHAIN_ID = "0xaa36a7";
 const ConnectWalletButton = ({
   // callback for error
   onError = () => {},
-  // callback for successful connection. useful for trigerring actions outside of this component
+  // callback for successful connection. useful for triggering actions outside of this component
   onConnect = () => {},
+  // callback for successful disconnection
+  onDisconnect = () => {},
 }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [warning, setWarning] = useState(null);
@@ -43,7 +45,13 @@ const ConnectWalletButton = ({
     }
   };
 
-  // Listen for chain changes (network switches)
+  const disconnectWallet = () => {
+    setWalletAddress(null);
+    setWarning(null);
+    onDisconnect();
+  };
+
+  // Listen for chain changes and check if in the correct network
   useEffect(() => {
     if (window.ethereum) {
       const handleChainChanged = () => {
@@ -65,6 +73,7 @@ const ConnectWalletButton = ({
           className={`connect-wallet-btn connect-wallet-btn--connected ${
             warning ? "connect-wallet-btn--warning" : ""
           }`}
+          onClick={disconnectWallet} 
         >
           {warning
             ? warning
